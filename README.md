@@ -1,0 +1,1 @@
+# dynamic-serilog-switch
