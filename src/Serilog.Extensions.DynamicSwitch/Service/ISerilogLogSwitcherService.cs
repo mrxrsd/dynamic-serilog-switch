@@ -1,7 +1,7 @@
 ﻿using Serilog.Events;
 using System.Collections.Generic;
 
-namespace Serilog.Extensions.DynamicSwitch.Service
+namespace Serilog.Extensions.DynamicSwitch
 {
     public interface ISerilogLogSwitcherService
     {

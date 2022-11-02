@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog.Extensions.DynamicSwitch.Service;
 
-namespace Serilog.Extensions.DynamicSwitch.Extensions
+namespace Serilog.Extensions.DynamicSwitch
 {
     public static class HostingExtensions
     {

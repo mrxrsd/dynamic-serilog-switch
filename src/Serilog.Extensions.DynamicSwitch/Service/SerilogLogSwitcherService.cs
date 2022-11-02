@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Serilog.Extensions.DynamicSwitch.Service
+namespace Serilog.Extensions.DynamicSwitch
 {
     public class SerilogLogSwitcherService : ISerilogLogSwitcherService
     {
