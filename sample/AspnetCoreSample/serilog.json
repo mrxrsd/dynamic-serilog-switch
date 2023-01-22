@@ -1,10 +1,15 @@
 {
   "Serilog": {
     "Using": [ "Serilog.Sinks.Console" ],
+    "LevelSwitches": {
+      "$mainSwitch": "Verbose",
+      "$appSwitch":  "Verbose"
+    },
     "MinimumLevel": {
+      "ControlledBy": "$mainSwitch",
       "Default": "Information",
       "Override": {
-        "AspnetCoreSample": "Verbose",
+        "AspnetCoreSample": "$appSwitch",
         "Microsoft": "Warning"
       }
     },

@@ -53,13 +53,13 @@ namespace Serilog.Extensions.DynamicSwitch
 
         internal void Init(LoggingLevelSwitchConfiguration llsConfiguration)
         {
-            _switches = new List<DynamicLoggingLevelSwitch>();
+            _switches = llsConfiguration.Switches.Values.ToList();
 
             var overridesMapProperty = _serilogLogger.GetType().GetField("_overrideMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var overridesMapValue    = overridesMapProperty.GetValue(_serilogLogger);
 
             var defaultSwitchProperty = overridesMapValue.GetType().GetField("_defaultLevelSwitch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var defaultSwitchValue    = (LoggingLevelSwitch) defaultSwitchProperty.GetValue(_serilogLogger);
+            var defaultSwitchValue    = (LoggingLevelSwitch) defaultSwitchProperty.GetValue(overridesMapValue);
 
             var defaultSwitchContext = GetSwitchByPrefix("*");
             defaultSwitchContext.AssociateSwitch(defaultSwitchValue);
