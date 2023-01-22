@@ -18,7 +18,7 @@ namespace AspnetCoreSample.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<LoggingLevelContext> Get()
+        public IEnumerable<DynamicLoggingLevelSwitch> Get()
         {
             Logger.Information("Log");
             Logger.Warning("Log");

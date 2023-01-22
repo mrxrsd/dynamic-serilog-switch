@@ -11,14 +11,14 @@ public class Program
                                 .Build();
 
         Log.Logger = new LoggerConfiguration()
-                            .ReadFrom.Configuration(configuration)
+                            .ReadFrom.Configuration(configuration, out var llsConfig)
                             .CreateLogger();
 
         try
         {
             Log.Information("Starting application...");
 
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args, llsConfig).Build().Run();
         }
         catch(Exception ex)
         {
@@ -31,10 +31,10 @@ public class Program
         
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
+    public static IHostBuilder CreateHostBuilder(string[] args, LoggingLevelSwitchConfiguration llsConfig) =>
         Host.CreateDefaultBuilder(args)
             .UseSerilog()
-            .AddDynamicLoggingLevel(Log.Logger)
+            .AddDynamicLoggingLevel(Log.Logger, llsConfig)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();

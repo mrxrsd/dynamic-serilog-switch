@@ -1,23 +1,31 @@
 ﻿using Serilog.Core;
-using Serilog.Events;
+using System;
+using System.Collections.Generic;
 
 namespace Serilog.Extensions.DynamicSwitch
 {
     public class DynamicLoggingLevelSwitch
     {
+        public Guid Id { get; set; }
+        public string SwitchName { get; set; }
         public LoggingLevelSwitch Switch { get; set; }
-        public string Prefix { get; set; }
+        public List<string> Prefixes { get; set; }
 
-        public DynamicLoggingLevelSwitch(string prefix, LoggingLevelSwitch lls)
+        public DynamicLoggingLevelSwitch(string switchName)
         {
-            Prefix = prefix;
+            Id         = Guid.NewGuid();
+            SwitchName = switchName;
+            Prefixes   = new List<string>();
+        }
+
+        public void AddPrefix(string prefix)
+        {
+            Prefixes.Add(prefix);
+        }
+
+        internal void AssociateSwitch(LoggingLevelSwitch lls)
+        {
             Switch = lls;
         }
-    }
-
-    public class LoggingLevelContext
-    {
-        public string Prefix { get; set; }
-        public LogEventLevel Level {get;set;}
     }
 }

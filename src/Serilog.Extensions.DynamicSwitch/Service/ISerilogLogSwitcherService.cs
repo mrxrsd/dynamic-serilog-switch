@@ -1,4 +1,5 @@
 ﻿using Serilog.Events;
+using System;
 using System.Collections.Generic;
 
 namespace Serilog.Extensions.DynamicSwitch
@@ -6,7 +7,8 @@ namespace Serilog.Extensions.DynamicSwitch
     public interface ISerilogLogSwitcherService
     {
         void SetLevel(string prefix, LogEventLevel level);
-        IList<LoggingLevelContext> GetSwitches();
+        void SetLevel(Guid guid, LogEventLevel level);
+        IList<DynamicLoggingLevelSwitch> GetSwitches();
 
     }
 }

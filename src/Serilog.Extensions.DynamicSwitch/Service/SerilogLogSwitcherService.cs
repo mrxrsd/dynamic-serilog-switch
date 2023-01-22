@@ -10,7 +10,7 @@ namespace Serilog.Extensions.DynamicSwitch
     public class SerilogLogSwitcherService : ISerilogLogSwitcherService
     {
         private readonly ILogger _serilogLogger;
-        private List<DynamicLoggingLevelSwitch> _switches;
+        private IList<DynamicLoggingLevelSwitch> _switches;
 
         public SerilogLogSwitcherService(ILogger serilogLogger)
         {
@@ -19,29 +19,50 @@ namespace Serilog.Extensions.DynamicSwitch
 
         public void SetLevel(string prefix, LogEventLevel level)
         {
-            var ls = GetSwitchByPrefix(prefix);
-            if (ls != null)
+            var ls = GetSwitchByPrefix(prefix)?.Switch;
+            SetLevelInternal(ls, level);
+        }
+        public IList<DynamicLoggingLevelSwitch> GetSwitches()
+        {
+            return _switches ?? Array.Empty<DynamicLoggingLevelSwitch>();
+        }
+
+        public void SetLevel(Guid id, LogEventLevel level)
+        {
+            var ls = _switches?.FirstOrDefault(x => x.Id == id)?.Switch;
+            SetLevelInternal(ls, level);
+        }
+
+        private void SetLevelInternal(LoggingLevelSwitch lls, LogEventLevel level)
+        {
+            if (lls != null)
             {
-                ls.MinimumLevel = level;
+                lls.MinimumLevel = level;
             }
         }
 
-        private LoggingLevelSwitch GetSwitchByPrefix(string prefix)
+        private DynamicLoggingLevelSwitch GetSwitchByPrefix(string prefix)
         {
             if (_switches != null && _switches.Any())
             {
-                return _switches.FirstOrDefault(x => x.Prefix == prefix)?.Switch;
+                return _switches.FirstOrDefault(x => x.Prefixes != null && x.Prefixes.Exists(y => y == prefix));
             }
 
             return null;
         }
 
-        internal void Init()
+        internal void Init(LoggingLevelSwitchConfiguration llsConfiguration)
         {
             _switches = new List<DynamicLoggingLevelSwitch>();
 
             var overridesMapProperty = _serilogLogger.GetType().GetField("_overrideMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var overridesMapValue    = overridesMapProperty.GetValue(_serilogLogger);
+
+            var defaultSwitchProperty = overridesMapValue.GetType().GetField("_defaultLevelSwitch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var defaultSwitchValue    = (LoggingLevelSwitch) defaultSwitchProperty.GetValue(_serilogLogger);
+
+            var defaultSwitchContext = GetSwitchByPrefix("*");
+            defaultSwitchContext.AssociateSwitch(defaultSwitchValue);
 
             var overridesProperty = overridesMapValue.GetType().GetField("_overrides", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var overridesValue    = overridesProperty.GetValue(overridesMapValue);
@@ -52,18 +73,17 @@ namespace Serilog.Extensions.DynamicSwitch
                 var ctxProperty     = overrideValue.GetType().GetProperty("Context");
                 var lsProperty      = overrideValue.GetType().GetProperty("LevelSwitch");
 
-                _switches.Add(new DynamicLoggingLevelSwitch((string) ctxProperty.GetValue(overrideValue), (LoggingLevelSwitch) lsProperty.GetValue(overrideValue)));
+                var serilogSwitch = (LoggingLevelSwitch)lsProperty.GetValue(overrideValue);
+                var serilogPrefix = (string)ctxProperty.GetValue(overrideValue);
+
+                var currSwitchContext = GetSwitchByPrefix(serilogPrefix);
+
+                if (currSwitchContext != null)
+                {
+                    currSwitchContext.AssociateSwitch(serilogSwitch);
+                }
             }
 
-        }
-
-        public IList<LoggingLevelContext> GetSwitches()
-        {
-            return _switches.Select(x => new LoggingLevelContext
-            {
-                Prefix = x.Prefix,
-                Level = x.Switch.MinimumLevel
-            })?.ToList();
         }
     }
 }
