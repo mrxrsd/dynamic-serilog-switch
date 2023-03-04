@@ -48,7 +48,7 @@ Dynamic Serilog Switch is a extension for serilog that expose a service to retri
     }
 ```
 
-**3.** Call `AddDynamicLogginLevel` passing serilog logger and switches configuration. That method will inject `ISerilogLogSwitcherService` using dotnet service collection. 
+**3.** Call `AddDynamicLoggingLevel` passing serilog logger and switches configuration. That method will inject `ISerilogLogSwitcherService` using dotnet service collection. 
 
 ```csharp
         Host.CreateDefaultBuilder(args)
@@ -77,6 +77,28 @@ Dynamic Serilog Switch is a extension for serilog that expose a service to retri
             app.UseDynamicLoggingLevelHelperPage();
         }
 ```
+## SerilogLogSwitcherService
+
+```csharp
+    public interface ISerilogLogSwitcherService
+    {
+        void SetLevel(string prefix, LogEventLevel level);
+        void SetLevel(Guid guid, LogEventLevel level);
+        IList<DynamicLoggingLevelSwitch> GetSwitches();
+
+    }
+```
+
+```csharp
+    public class DynamicLoggingLevelSwitch
+    {
+        public Guid Id { get; set; }
+        public string SwitchName { get; set; }
+        public List<string> Prefixes { get; set; }
+    }
+```
+
+## Middleware
 
 ## License
 
