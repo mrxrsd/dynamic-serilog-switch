@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>dynamic-serilog-switch</id>
+    <version>$version$</version>
+    <title>Dynamic Serilog Switch</title>
+    <authors>mrxrsd</authors>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/mrxrsd/dynamic-serilog-switch</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+		Dynamic Serilog Switch provides a way to change your application logging level during runtime.
+	</description>
+	<summary>
+		Dynamic Serilog Switch provides a way to change your application logging level during runtime.
+	</summary>
+	<tags>serilog dynamic log</tags>
+	<dependencies>
+		<group targetFramework=".NETStandard2.0" />
+	</dependencies>
+  </metadata>
+</package>
