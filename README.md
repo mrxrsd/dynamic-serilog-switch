@@ -100,6 +100,19 @@ Dynamic Serilog Switch is a extension for serilog that expose a service to retri
 
 ## Middleware
 
+### List all switches 
+Just call Dynamic Serilog Switch Middleware as config in your startup. (default: /dynamic-serilog-switch)<br>
+
+[GET] http://base-url/dynamic-serilog-switch <br>
+
+
+<img src="https://github.com/mrxrsd/dynamic-serilog-switch/blob/master/imgs/middleware.png?raw=true" width=50% height=50%>
+
+### Change Logging Level
+
+[GET] http://base-url/dynamic-serilog-switch/{id}/{logging-event}<br><br>
+Example: http://base-url/dynamic-serilog-switch/87d01cbf-a6d9-4488-b90a-3f6b629bbdc6/Information<br>
+
 ## License
 
 MIT
